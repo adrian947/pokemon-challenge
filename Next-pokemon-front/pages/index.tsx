@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ErrorBanner from '../components/ui/ErrorBanner';
 import Spinner from '../components/ui/Spinner';
 
+
 const Home: NextPage = () => {
   const dispatch = useDispatch();
   const { data: allDataPokemons, error, isLoading } = useGetPokemonsQuery(null);
@@ -27,15 +28,13 @@ const Home: NextPage = () => {
   if (error) return <ErrorBanner />;
 
   return (
-    <>
-      <Layout>
-        <Grid.Container gap={2} justify='center'>
-          {pokemons.results?.map((pokemon: SmallPokemon) => (
-            <CardPokemon key={pokemon.id} pokemon={pokemon} />
-          ))}
-        </Grid.Container>
-      </Layout>
-    </>
+    <Layout>
+      <Grid.Container gap={2} justify='center'>
+        {pokemons.results?.map((pokemon: SmallPokemon) => (
+          <CardPokemon key={pokemon.id} pokemon={pokemon} />
+        ))}
+      </Grid.Container>
+    </Layout>
   );
 };
 

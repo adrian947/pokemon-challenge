@@ -1,16 +1,26 @@
 import '../styles/globals.css';
-import { NextUIProvider } from '@nextui-org/react';
 import type { AppProps } from 'next/app';
-import { darkTheme } from '../themes';
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import { store } from '../lib/StoreProvider';
+import { darkTheme, lightTheme } from '../themes';
+import { NextUIProvider } from '@nextui-org/react';
+import { ThemeProvider as NextThemesProvider } from 'next-themes';
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps) {  
   return (
     <Provider store={store}>
-      <NextUIProvider theme={darkTheme}>
-        <Component {...pageProps} />
-      </NextUIProvider>
+      <NextThemesProvider
+        defaultTheme="dark"
+        attribute='class'
+        value={{
+          light: lightTheme.className,
+          dark: darkTheme.className,
+        }}
+      >
+        <NextUIProvider>
+          <Component {...pageProps} />
+        </NextUIProvider>
+      </NextThemesProvider>
     </Provider>
   );
 }

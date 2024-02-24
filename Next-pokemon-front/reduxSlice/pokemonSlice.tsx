@@ -8,14 +8,12 @@ const slice = createSlice({
     pokemons: [],
   },
   reducers: {
-    setPokemons: (state, { payload }) => {      
+    setPokemons: (state, { payload }) => {
       state.pokemons = payload;
     },
   },
-  
 });
 
 export const { setPokemons } = slice.actions;
 export default slice.reducer;
 export const selectPokemons = (state: RootState) => state.pokemons;
-

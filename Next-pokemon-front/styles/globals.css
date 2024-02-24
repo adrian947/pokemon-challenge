@@ -14,7 +14,7 @@ a {
 * {
   box-sizing: border-box;
 }
-.container{
+.container {
   padding: 1rem;
 }
 
@@ -23,7 +23,10 @@ select {
   padding: 0.7rem;
   border-radius: 8px;
   border: none;
-  min-width: 15rem;  
-  color: #006AE6;
+  min-width: 15rem;
+  color: #006ae6;
   font-size: 0.9rem;
+}
+.bg-select {
+  background-color: #bfd8fc;
 }

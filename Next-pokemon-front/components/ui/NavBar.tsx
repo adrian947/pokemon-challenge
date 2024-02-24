@@ -7,27 +7,33 @@ import {
   Container,
   Input,
   Link,
-  Loading,  
+  Loading,
   Spacer,
+  Switch,
   Text,
   theme,
+  useTheme,
 } from '@nextui-org/react';
+import { useTheme as useNextTheme } from 'next-themes';
 import styles from '../../styles/NavBar.module.css';
 import {
   useGetPokemonsQuery,
   useGetTypesPokemonQuery,
   useLazyGetPokemonfilteredQuery,
 } from '../../services/pokemons';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setPokemons } from '../../reduxSlice/pokemonSlice';
 import ErrorBanner from './ErrorBanner';
 import Select from './Select';
 import Spinner from './Spinner';
+import { SunIcon } from '../icons/SunIcon';
+import { MoonIcon } from '../icons/MoonIcon';
 
 export const NavBar = () => {
+  const { setTheme } = useNextTheme();
+  const { isDark } = useTheme();
   const { pathname, push } = useRouter();
   const dispatch = useDispatch();
-
   const [isFindByName, setIsfindByName] = useState(false);
   const [inputFilter, setInputFilter] = useState('');
 
@@ -75,10 +81,7 @@ export const NavBar = () => {
   };
 
   return (
-    <div
-      className={styles.navbar}
-      style={{ backgroundColor: theme?.colors.gray900.value }}
-    >
+    <div className={styles.navbar}>
       <NextLink href={'/'} passHref>
         <Link css={{ display: 'flex', alignItems: 'center' }}>
           <Image
@@ -122,6 +125,7 @@ export const NavBar = () => {
               />
             ) : (
               <Select
+                isDark={isDark}
                 options={allTypes}
                 onSelectChange={(e) => setInputFilter(e)}
                 inputFilter={inputFilter}
@@ -144,6 +148,14 @@ export const NavBar = () => {
         </>
       )}
 
+      <Spacer css={{ flex: 1 }} />
+      <Switch
+        checked={isDark}
+        onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
+        size='xl'
+        iconOn={<SunIcon filled />}
+        iconOff={<MoonIcon filled />}
+      />
       <Spacer css={{ flex: 1 }} />
       <NextLink href='/favorites' passHref>
         <Link>
