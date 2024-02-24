@@ -148,15 +148,15 @@ export const NavBar = () => {
         </>
       )}
 
-      <Spacer css={{ flex: 1 }} />
+      <Spacer css={{ flex: 1 }} />    
       <Switch
         checked={isDark}
         onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
         size='xl'
         iconOn={<SunIcon filled />}
         iconOff={<MoonIcon filled />}
+        css={{ marginRight: '20px' }}
       />
-      <Spacer css={{ flex: 1 }} />
       <NextLink href='/favorites' passHref>
         <Link>
           <Text h3>Favorites</Text>

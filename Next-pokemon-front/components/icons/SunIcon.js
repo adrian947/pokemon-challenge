@@ -1,10 +1,9 @@
 export const SunIcon = ({
   fill = "currentColor",
   filled,
-  size,
-  height,
-  width,
-  label,
+  size = 24,
+  height = 24,
+  width = 24,  
   ...props
 }) => {
   if (filled) {
