@@ -2,12 +2,13 @@ import { NextPage } from 'next';
 import React, { useEffect } from 'react';
 import { Pokemon } from '../../interfaces/interfaces';
 import Image from 'next/image';
-import { Grid, Card, Text, Container, Button } from '@nextui-org/react';
+import { Grid, Card, Text, Container, Button, Spinner } from '@nextui-org/react';
 import { Layout } from '../../components/layouts';
 import { localFavorites } from '../../utils';
 import confetti from 'canvas-confetti';
 import { useLazyGetPokemonQuery } from '../../services/pokemons';
 import { useRouter } from 'next/router';
+import ErrorBanner from '../../components/ui/ErrorBanner';
 
 interface Props {
   pokemon: Pokemon;
@@ -48,8 +49,8 @@ const PokemonByNamePage: NextPage<Props> = () => {
       });
     }
   };
-  if (isError) return <h1>Error</h1>;
-  if (!isSuccess) return <h1>loading</h1>;
+  if (isLoading || !isSuccess) return <Spinner />;
+  if (isError) return <ErrorBanner />;
 
   return (
     <Layout title={pokemon.name}>

@@ -18,10 +18,11 @@ export const pokemonsApi = createApi({
     //   tagTypes: ['get', 'companies'],
     endpoints: builder => ({
         getPokemons: builder.query({
-            query: () => {
+            query: (data) => {
                 return {
                     url: '/pokemons',
-                    method: 'GET',                  
+                    method: 'GET',     
+                    params: data                 
                 };
             },
         }),

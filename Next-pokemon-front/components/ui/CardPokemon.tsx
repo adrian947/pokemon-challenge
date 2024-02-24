@@ -22,7 +22,7 @@ export const CardPokemon: FC<Props> = ({ pokemon }) => {
             <Text h3 weight='bold' color='#9E9E9E'>
               #{pokemon.id}
             </Text>
-            <Text h3 color='white' transform='uppercase'>
+            <Text h3 transform='uppercase'>
               {pokemon.name}
             </Text>
           </Row>

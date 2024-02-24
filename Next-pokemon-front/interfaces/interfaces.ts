@@ -3,6 +3,7 @@ export interface PokemonListResults {
   next?: string;
   previous?: string;
   results: SmallPokemon[];
+  totalPages: number
 }
 
 export interface SmallPokemon {

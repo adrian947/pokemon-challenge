@@ -22,7 +22,7 @@ import {
   useLazyGetPokemonfilteredQuery,
 } from '../../services/pokemons';
 import { useDispatch, useSelector } from 'react-redux';
-import { setPokemons } from '../../reduxSlice/pokemonSlice';
+import { activeFilter, setPokemons } from '../../reduxSlice/pokemonSlice';
 import ErrorBanner from './ErrorBanner';
 import Select from './Select';
 import Spinner from './Spinner';
@@ -34,6 +34,7 @@ export const NavBar = () => {
   const { isDark } = useTheme();
   const { pathname, push } = useRouter();
   const dispatch = useDispatch();
+
   const [isFindByName, setIsfindByName] = useState(false);
   const [inputFilter, setInputFilter] = useState('');
 
@@ -59,6 +60,7 @@ export const NavBar = () => {
     if (inputFilter) {
       fetchData();
     }
+    dispatch(activeFilter(inputFilter))
   }, [inputFilter, getPokemonfiltered, isFindByName]);
 
   useEffect(() => {
@@ -139,7 +141,7 @@ export const NavBar = () => {
                 Reset
               </Button>
             )}
-            {isError && (
+            {(isError && inputFilter) && (
               <Text color='error' css={{ margin: '0px' }}>
                 Pokemon not found
               </Text>
