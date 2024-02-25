@@ -10,8 +10,12 @@ COPY ./package*.json ./
 # Instala las dependencias
 RUN npm install
 
+
 # Copia todos los archivos del backend al directorio de trabajo
 COPY . .
+
+# Ejecuta los comandos de prueba
+RUN npm test
 
 # Expone el puerto en el que la aplicación se ejecutará
 EXPOSE 5000
