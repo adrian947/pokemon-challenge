@@ -5,8 +5,7 @@ const getJWT = async (req, res) => {
     const userData = {
       activePokedex: 'true',
     };
-
-    const token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: '4h' });    
 
     res.status(200).json({ token });
   } catch (error) {

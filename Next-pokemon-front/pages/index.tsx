@@ -34,7 +34,7 @@ const Home: NextPage = () => {
         const { data } = await getPokemons({ page });
         dispatch(setPokemons(data.results));
         dispatch(saveToken(token));
-      } catch (error) {
+      } catch (error) {        
         <ErrorBanner />;
       }
     },
