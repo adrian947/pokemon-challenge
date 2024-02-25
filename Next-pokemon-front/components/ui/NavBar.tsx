@@ -20,8 +20,9 @@ import {
   useGetPokemonsQuery,
   useGetTypesPokemonQuery,
   useLazyGetPokemonfilteredQuery,
+  useLazyGetPokemonsQuery,
 } from '../../services/pokemons';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { activeFilter, setPokemons } from '../../reduxSlice/pokemonSlice';
 import ErrorBanner from './ErrorBanner';
 import Select from './Select';
@@ -39,7 +40,9 @@ export const NavBar = () => {
   const [inputFilter, setInputFilter] = useState('');
 
   const { data: allTypes, error, isLoading } = useGetTypesPokemonQuery(null);
-  const { refetch, data: pokemonRefetch } = useGetPokemonsQuery(null);
+  // const { refetch, data: pokemonRefetch } = useGetPokemonsQuery(null);
+  const [getPokemons, { data: pokemonRefetch }] = useLazyGetPokemonsQuery();
+
   const [
     getPokemonfiltered,
     {
@@ -60,12 +63,12 @@ export const NavBar = () => {
     if (inputFilter) {
       fetchData();
     }
-    dispatch(activeFilter(inputFilter))
+    dispatch(activeFilter(inputFilter));
   }, [inputFilter, getPokemonfiltered, isFindByName]);
 
   useEffect(() => {
     if (isSuccess && pokemon && !isFindByName) {
-      dispatch(setPokemons(pokemon));
+      dispatch(setPokemons(pokemon.results));
     }
     if (pokemon?.name && isFindByName) {
       push(`/name/${pokemon.name}`);
@@ -76,8 +79,9 @@ export const NavBar = () => {
   if (error) return <ErrorBanner />;
 
   const handleRefetch = async () => {
-    await refetch();
-    dispatch(setPokemons(pokemonRefetch));
+    const { data } = await getPokemons({ page: 1 });
+    dispatch(setPokemons(data.results));
+
     setInputFilter('');
     setIsfindByName(false);
   };
@@ -141,7 +145,7 @@ export const NavBar = () => {
                 Reset
               </Button>
             )}
-            {(isError && inputFilter) && (
+            {isError && inputFilter && (
               <Text color='error' css={{ margin: '0px' }}>
                 Pokemon not found
               </Text>
@@ -150,7 +154,7 @@ export const NavBar = () => {
         </>
       )}
 
-      <Spacer css={{ flex: 1 }} />    
+      <Spacer css={{ flex: 1 }} />
       <Switch
         checked={isDark}
         onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
