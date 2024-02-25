@@ -6,9 +6,10 @@ const {
   getPokemonById,
   getPokemonTypes,
 } = require('../controllers/pokemonController.js');
+const { checkAuth } = require('../middleware/checkAuth.js');
 
-pokemonRouter.get('/pokemons', getPokemons);
-pokemonRouter.get('/pokemons/:id', getPokemonById);
-pokemonRouter.get('/types', getPokemonTypes);
+pokemonRouter.get('/pokemons',checkAuth, getPokemons);
+pokemonRouter.get('/pokemons/:id',checkAuth, getPokemonById);
+pokemonRouter.get('/types',checkAuth, getPokemonTypes);
 
 module.exports = pokemonRouter;

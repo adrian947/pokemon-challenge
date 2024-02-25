@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const pokemonRouter = require('./src/routes/pokemonRouter');
 const authRouter = require('./src/routes/authRouter');
+require('dotenv').config();
+
 const app = express();
 const port = 5000;
 

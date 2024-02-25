@@ -4,8 +4,8 @@ import { SmallPokemon } from '../interfaces/interfaces';
 import { Button, Grid, Row } from '@nextui-org/react';
 import { CardPokemon } from '../components/ui';
 import { useCallback, useEffect, useState } from 'react';
-import {  
-  useLazyGetJWTQuery,  
+import {
+  useLazyGetJWTQuery,
   useLazyGetPokemonsQuery,
 } from '../services/pokemons';
 import { saveToken, setPokemons } from '../reduxSlice/pokemonSlice';
@@ -28,11 +28,18 @@ const Home: NextPage = () => {
     token: tokenStore,
   } = useSelector((state: any) => state.pokemons);
 
-  const fetchPokemons = useCallback(async (token: string) => {
-    const { data } = await getPokemons({ page });
-    dispatch(setPokemons(data.results));
-    dispatch(saveToken(token));
-  }, [page, dispatch, getPokemons]);
+  const fetchPokemons = useCallback(
+    async (token: string) => {
+      try {
+        const { data } = await getPokemons({ page });
+        dispatch(setPokemons(data.results));
+        dispatch(saveToken(token));
+      } catch (error) {
+        <ErrorBanner />;
+      }
+    },
+    [page, dispatch, getPokemons]
+  );
 
   useEffect(() => {
     const token = localStorage.getItem('token');

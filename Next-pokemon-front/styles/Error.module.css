@@ -1,8 +1,10 @@
 .container {
   height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+
 }
 .text {
   border: 2px solid #006ae6;
