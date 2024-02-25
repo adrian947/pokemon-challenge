@@ -1,34 +1,33 @@
+import { useCallback, useEffect } from 'react';
 import type { NextPage } from 'next';
-import { Layout } from '../components/layouts';
-import { SmallPokemon } from '../interfaces/interfaces';
-import { Button, Grid, Row } from '@nextui-org/react';
-import { CardPokemon } from '../components/ui';
-import { useCallback, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+
 import {
   useLazyGetJWTQuery,
   useLazyGetPokemonsQuery,
 } from '../services/pokemons';
-import { setPokemons } from '../reduxSlice/pokemonSlice';
+import { savePage, saveToken, setPokemons } from '../redux/pokemonSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import Spinner from '../components/ui/Spinner';
-import { Pagination } from '@nextui-org/react';
+
+import { SmallPokemon } from '../interfaces/interfaces';
+import { Button, Grid, Row } from '@nextui-org/react';
+import { CardPokemon } from '../components/ui';
+
 import styles from '../styles/Error.module.css';
-import { useRouter } from 'next/router';
+import { Pagination } from '@nextui-org/react';
+import { Layout } from '../components/layouts';
+import Spinner from '../components/ui/Spinner';
 
-const Home: NextPage = () => {
-  const [token, setToken] = useState<string | null>(null);
-
-  const { push } = useRouter();
-  const [page, setPage] = useState(1);
+const Home: NextPage = () => {  
+  const { push } = useRouter();  
   const dispatch = useDispatch();
-  const [getJWT] = useLazyGetJWTQuery();
-  const [getPokemons, { isLoading, isError, data: allData }] =
-    useLazyGetPokemonsQuery();
 
-  const {
-    pokemons,
-    activeFilter,    
-  } = useSelector((state: any) => state.pokemons);
+  const [getJWT, { error: errorToken }] = useLazyGetJWTQuery();  
+  const [getPokemons, { isLoading, isError, data: allData }] = useLazyGetPokemonsQuery();
+
+  const { pokemons, activeFilter, token: tokenStore, page } = useSelector(
+    (state: any) => state.pokemons
+  );
 
   const fetchPokemons = useCallback(async () => {
     try {
@@ -41,7 +40,7 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    setToken(token);
+    dispatch(saveToken(token));
     if (token) {
       fetchPokemons();
     }
@@ -50,17 +49,18 @@ const Home: NextPage = () => {
     }
   }, [dispatch, fetchPokemons, push, page, isError]);
 
-  if (isLoading) return <Spinner />;
-
+  
   const handlePageChange = (newPage: number) => {
-    setPage(newPage);
+    dispatch(savePage(newPage))    
   };
 
   const handleLogin = async () => {
     const { data } = await getJWT(null);
-    localStorage.setItem('token', data.token);
-    setToken(data.token);
-    fetchPokemons();
+    if (data) {
+      localStorage.setItem('token', data.token);
+      dispatch(saveToken(data.token));
+      fetchPokemons();
+    }
   };
 
   const ButtonLogin = () => (
@@ -68,21 +68,25 @@ const Home: NextPage = () => {
       <Button color='gradient' bordered auto onClick={handleLogin}>
         Login
       </Button>
+      {/* @ts-ignore */}
+      <p>{errorToken && errorToken.data.msg}</p>
     </div>
   );
-
+  
+  if (isLoading) return <Spinner />;
   return (
     <>
-      {!token ? (
-        <ButtonLogin />
+      {!tokenStore ? (
+        <ButtonLogin />        
       ) : (
         <Layout>
           {!activeFilter && (
             <Row css={{ display: 'flex', justifyContent: 'center' }}>
               <Pagination
                 total={allData?.totalPages}
-                initialPage={1}
+                initialPage={page}
                 onChange={(page: number) => handlePageChange(page)}
+                page={page}
               />
             </Row>
           )}

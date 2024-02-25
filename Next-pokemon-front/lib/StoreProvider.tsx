@@ -1,6 +1,6 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { pokemonsApi } from '../services/pokemons';
-import pokemonSlice from '../reduxSlice/pokemonSlice';
+import pokemonSlice from '../redux/pokemonSlice';
 
 const rootReducer = combineReducers({
   [pokemonsApi.reducerPath]: pokemonsApi.reducer,

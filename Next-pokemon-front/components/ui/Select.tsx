@@ -1,5 +1,3 @@
-import React, { useState } from 'react';
-
 interface PokemonType {
   type: string;
   id: number;

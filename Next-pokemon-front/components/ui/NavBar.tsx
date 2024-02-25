@@ -2,6 +2,15 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import Image from 'next/image';
+
+import {  
+  useGetTypesPokemonQuery,
+  useLazyGetPokemonfilteredQuery,
+  useLazyGetPokemonsQuery,
+} from '../../services/pokemons';
+import { useDispatch } from 'react-redux';
+import { activeFilter, savePage, setPokemons } from '../../redux/pokemonSlice';
+
 import {
   Button,
   Container,
@@ -10,20 +19,12 @@ import {
   Loading,
   Spacer,
   Switch,
-  Text,
-  theme,
+  Text,  
   useTheme,
 } from '@nextui-org/react';
 import { useTheme as useNextTheme } from 'next-themes';
 import styles from '../../styles/NavBar.module.css';
-import {
-  useGetPokemonsQuery,
-  useGetTypesPokemonQuery,
-  useLazyGetPokemonfilteredQuery,
-  useLazyGetPokemonsQuery,
-} from '../../services/pokemons';
-import { useDispatch } from 'react-redux';
-import { activeFilter, setPokemons } from '../../reduxSlice/pokemonSlice';
+
 import ErrorBanner from './ErrorBanner';
 import Select from './Select';
 import Spinner from './Spinner';
@@ -63,7 +64,7 @@ export const NavBar = () => {
       fetchData();
     }
     dispatch(activeFilter(inputFilter));
-  }, [inputFilter, getPokemonfiltered, isFindByName]);
+  }, [dispatch ,getPokemonfiltered, isFindByName, inputFilter]);
 
   useEffect(() => {
     if (isSuccess && pokemon && !isFindByName) {
@@ -80,6 +81,7 @@ export const NavBar = () => {
   const handleRefetch = async () => {
     const { data } = await getPokemons({ page: 1 });
     dispatch(setPokemons(data.results));
+    dispatch(savePage(1));
 
     setInputFilter('');
     setIsfindByName(false);

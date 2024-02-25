@@ -7,21 +7,26 @@ const slice = createSlice({
   initialState: {
     pokemons: [],
     activeFilter: false,
-    token: null
+    token: null,
+    page: 1,
   },
   reducers: {
     setPokemons: (state, { payload }) => {
       state.pokemons = payload;
     },
-    activeFilter: (state, { payload }) => {      
+    activeFilter: (state, { payload }) => {
       state.activeFilter = !!payload;
     },
-    saveToken: (state, { payload }) => {      
+    saveToken: (state, { payload }) => {
       state.token = payload;
+    },
+    savePage: (state, { payload }) => {
+      state.page = payload;
     },
   },
 });
 
+export const { savePage } = slice.actions;
 export const { saveToken } = slice.actions;
 export const { activeFilter } = slice.actions;
 export const { setPokemons } = slice.actions;

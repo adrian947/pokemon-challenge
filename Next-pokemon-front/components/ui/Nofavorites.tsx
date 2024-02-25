@@ -1,6 +1,6 @@
 
-import { Container, Text } from "@nextui-org/react";
 import Image from "next/image";
+import { Container, Text } from "@nextui-org/react";
 
 export const Nofavorites = () => {
   return (

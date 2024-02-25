@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
-import styles from '../../styles/Error.module.css';
 import { useRouter } from 'next/router';
 import { Button } from '@nextui-org/react';
+import styles from '../../styles/Error.module.css';
 
 interface ErrorBannerProps {
   error?: string;

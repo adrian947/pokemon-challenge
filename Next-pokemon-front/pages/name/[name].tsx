@@ -1,5 +1,7 @@
-import { NextPage } from 'next';
 import React, { useEffect } from 'react';
+import { NextPage } from 'next';
+import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import { Pokemon } from '../../interfaces/interfaces';
 import Image from 'next/image';
 import {
@@ -7,16 +9,14 @@ import {
   Card,
   Text,
   Container,
-  Button,
-  Spinner,
+  Button,  
 } from '@nextui-org/react';
-import { Layout } from '../../components/layouts';
 import { localFavorites } from '../../utils';
-import confetti from 'canvas-confetti';
+import { Layout } from '../../components/layouts';
 import { useLazyGetPokemonQuery } from '../../services/pokemons';
-import { useRouter } from 'next/router';
 import ErrorBanner from '../../components/ui/ErrorBanner';
-import NextLink from 'next/link';
+import Spinner from '../../components/ui/Spinner';
+import confetti from 'canvas-confetti';
 
 interface Props {
   pokemon: Pokemon;
@@ -41,7 +41,7 @@ const PokemonByNamePage: NextPage<Props> = () => {
     if (isError) {
       router.push('/error');
     }
-  }, [getPokemon, namePokemon, isError]);
+  }, [getPokemon, namePokemon, isError, router]);
 
   useEffect(() => {
     setIsFavorite(localFavorites.exitsPokemonInLocaleStorage(pokemon?.id));

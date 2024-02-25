@@ -1,6 +1,6 @@
 import NextLink from "next/link";
-import { Grid, Card, Link } from "@nextui-org/react";
 import { FC } from "react";
+import { Grid, Card, Link } from "@nextui-org/react";
 
 interface Props {
   favoritesPokemons: number[];
