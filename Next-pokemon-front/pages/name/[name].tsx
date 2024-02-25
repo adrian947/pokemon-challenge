@@ -2,13 +2,21 @@ import { NextPage } from 'next';
 import React, { useEffect } from 'react';
 import { Pokemon } from '../../interfaces/interfaces';
 import Image from 'next/image';
-import { Grid, Card, Text, Container, Button, Spinner } from '@nextui-org/react';
+import {
+  Grid,
+  Card,
+  Text,
+  Container,
+  Button,
+  Spinner,
+} from '@nextui-org/react';
 import { Layout } from '../../components/layouts';
 import { localFavorites } from '../../utils';
 import confetti from 'canvas-confetti';
 import { useLazyGetPokemonQuery } from '../../services/pokemons';
 import { useRouter } from 'next/router';
 import ErrorBanner from '../../components/ui/ErrorBanner';
+import NextLink from 'next/link';
 
 interface Props {
   pokemon: Pokemon;
@@ -20,18 +28,20 @@ const PokemonByNamePage: NextPage<Props> = () => {
 
   const [isFavorite, setIsFavorite] = React.useState(false);
 
-  const [
-    getPokemon,
-    { isSuccess, isFetching, isLoading, isError, data: pokemon },
-  ] = useLazyGetPokemonQuery();
+  const [getPokemon, { isSuccess, isLoading, isError, data: pokemon }] =
+    useLazyGetPokemonQuery();
 
   useEffect(() => {
     const fetchData = async () => {
-      await getPokemon({ idOrName: namePokemon });
+      const idOrName = (namePokemon as string)?.toLowerCase();
+      await getPokemon({ idOrName });
     };
 
     fetchData();
-  }, [getPokemon, namePokemon]);
+    if (isError) {
+      router.push('/error');
+    }
+  }, [getPokemon, namePokemon, isError]);
 
   useEffect(() => {
     setIsFavorite(localFavorites.exitsPokemonInLocaleStorage(pokemon?.id));
@@ -80,6 +90,11 @@ const PokemonByNamePage: NextPage<Props> = () => {
               <Text size={40} transform='uppercase'>
                 {pokemon.name}
               </Text>
+              <NextLink href={'/'} passHref>
+                <Button color='gradient' bordered auto css={{ marginLeft: '4rem' }}>
+                  Back
+                </Button>
+              </NextLink>
             </Card.Header>
             <Card.Body>
               <Text size={20}>Sprites</Text>

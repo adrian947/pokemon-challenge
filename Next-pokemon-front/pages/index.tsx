@@ -8,14 +8,17 @@ import {
   useLazyGetJWTQuery,
   useLazyGetPokemonsQuery,
 } from '../services/pokemons';
-import { saveToken, setPokemons } from '../reduxSlice/pokemonSlice';
+import { setPokemons } from '../reduxSlice/pokemonSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import ErrorBanner from '../components/ui/ErrorBanner';
 import Spinner from '../components/ui/Spinner';
 import { Pagination } from '@nextui-org/react';
 import styles from '../styles/Error.module.css';
+import { useRouter } from 'next/router';
 
 const Home: NextPage = () => {
+  const [token, setToken] = useState<string | null>(null);
+
+  const { push } = useRouter();
   const [page, setPage] = useState(1);
   const dispatch = useDispatch();
   const [getJWT] = useLazyGetJWTQuery();
@@ -24,32 +27,30 @@ const Home: NextPage = () => {
 
   const {
     pokemons,
-    activeFilter,
-    token: tokenStore,
+    activeFilter,    
   } = useSelector((state: any) => state.pokemons);
 
-  const fetchPokemons = useCallback(
-    async (token: string) => {
-      try {
-        const { data } = await getPokemons({ page });
-        dispatch(setPokemons(data.results));
-        dispatch(saveToken(token));
-      } catch (error) {        
-        <ErrorBanner />;
-      }
-    },
-    [page, dispatch, getPokemons]
-  );
+  const fetchPokemons = useCallback(async () => {
+    try {
+      const { data } = await getPokemons({ page });
+      dispatch(setPokemons(data.results));
+    } catch (error) {
+      push('/error');
+    }
+  }, [page, dispatch, push, getPokemons]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    setToken(token);
     if (token) {
-      fetchPokemons(token);
+      fetchPokemons();
     }
-  }, [dispatch, fetchPokemons, page]);
+    if (isError) {
+      push('/error');
+    }
+  }, [dispatch, fetchPokemons, push, page, isError]);
 
   if (isLoading) return <Spinner />;
-  if (isError) return <ErrorBanner />;
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -58,8 +59,8 @@ const Home: NextPage = () => {
   const handleLogin = async () => {
     const { data } = await getJWT(null);
     localStorage.setItem('token', data.token);
-    dispatch(saveToken(data.token));
-    fetchPokemons(data.token);
+    setToken(data.token);
+    fetchPokemons();
   };
 
   const ButtonLogin = () => (
@@ -72,7 +73,7 @@ const Home: NextPage = () => {
 
   return (
     <>
-      {!tokenStore ? (
+      {!token ? (
         <ButtonLogin />
       ) : (
         <Layout>

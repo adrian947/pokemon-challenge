@@ -15,7 +15,7 @@ git clone git@github.com:adrian947/pokemon-challenge.git
 ```
 2- Dentro de la carpeta **Node-pokemon-back** cambia el archivo `.env.example` por `.env` (dejo variables de ejemplo, puedes usar las mismas o cambiarlas)
 
-3- Asegurate de estar dentro de la carpeta **pokedex-challenge** y ejecuta:
+3- Asegurate de estar dentro de la carpeta **pokemon-challenge** y ejecuta:
 ```bash
 docker-compose up
 ```

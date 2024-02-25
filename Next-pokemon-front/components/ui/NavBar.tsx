@@ -39,9 +39,8 @@ export const NavBar = () => {
   const [isFindByName, setIsfindByName] = useState(false);
   const [inputFilter, setInputFilter] = useState('');
 
-  const { data: allTypes, error, isLoading } = useGetTypesPokemonQuery(null);
-  // const { refetch, data: pokemonRefetch } = useGetPokemonsQuery(null);
-  const [getPokemons, { data: pokemonRefetch }] = useLazyGetPokemonsQuery();
+  const { data: allTypes, error, isLoading } = useGetTypesPokemonQuery(null);  
+  const [getPokemons] = useLazyGetPokemonsQuery();
 
   const [
     getPokemonfiltered,
