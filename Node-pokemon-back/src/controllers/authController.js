@@ -9,7 +9,7 @@ const getJWT = async (req, res) => {
 
     res.status(200).json({ token });
   } catch (error) {
-    res.status(400).json({ msg: `Error ${error}` });
+    res.status(400).json({ msg: `${error}` });
   }
 };
 

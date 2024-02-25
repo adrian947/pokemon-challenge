@@ -7,6 +7,10 @@ const {
   getPokemonTypes,
 } = require('../controllers/pokemonController.js');
 const { checkAuth } = require('../middleware/checkAuth.js');
+const {
+  validateQueryParams,
+  validatePokemonParams,
+} = require('../validators/pokemonsValidator.js');
 
 /**
  * @openapi
@@ -49,7 +53,7 @@ const { checkAuth } = require('../middleware/checkAuth.js');
  *      400:
  *        description: Bad Request
  */
-pokemonRouter.get('/pokemons', checkAuth, getPokemons);
+pokemonRouter.get('/pokemons', checkAuth, validateQueryParams, getPokemons);
 
 /**
  * @openapi
@@ -83,13 +87,18 @@ pokemonRouter.get('/pokemons', checkAuth, getPokemons);
  *       '400':
  *        description: Bad Request
  */
-pokemonRouter.get('/pokemons/:id', checkAuth, getPokemonById);
+pokemonRouter.get(
+  '/pokemons/:id',
+  checkAuth,
+  validatePokemonParams,
+  getPokemonById
+);
 
 /**
  * @openapi
  * /api/types:
  *   get:
- *     summary: Get a types pokemons 
+ *     summary: Get a types pokemons
  *     tags: [Pokemon Controller]
  *     security:
  *       - bearerAuth: []
