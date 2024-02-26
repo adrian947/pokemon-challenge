@@ -1,10 +1,6 @@
 # Pokedex
 > Pokédex es una aplicación que te permite explorar y obtener información detallada sobre diferentes Pokémon. Esta aplicación está construida con tecnologías modernas y utiliza Docker para facilitar el despliegue y Swagger para una documentación clara de la API.
 
-```bash
-git clone git@github.com:adrian947/pokemon-challenge.git
-```
---- 
 ## Inicio rápido
 Para ejecutar la aplicación localmente, sigue estos sencillos pasos:
 
