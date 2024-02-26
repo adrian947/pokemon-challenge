@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import Image from 'next/image';
 
-import {  
+import {
   useGetTypesPokemonQuery,
   useLazyGetPokemonfilteredQuery,
   useLazyGetPokemonsQuery,
@@ -18,21 +18,17 @@ import {
   Link,
   Loading,
   Spacer,
-  Switch,
-  Text,  
+  Text,
   useTheme,
 } from '@nextui-org/react';
-import { useTheme as useNextTheme } from 'next-themes';
-import styles from '../../styles/NavBar.module.css';
 
+import styles from '../../styles/NavBar.module.css';
 import ErrorBanner from './ErrorBanner';
 import Select from './Select';
 import Spinner from './Spinner';
-import { SunIcon } from '../icons/SunIcon';
-import { MoonIcon } from '../icons/MoonIcon';
+import SwitchTheme from './SwitchTheme';
 
 export const NavBar = () => {
-  const { setTheme } = useNextTheme();
   const { isDark } = useTheme();
   const { pathname, push } = useRouter();
   const dispatch = useDispatch();
@@ -40,7 +36,7 @@ export const NavBar = () => {
   const [isFindByName, setIsfindByName] = useState(false);
   const [inputFilter, setInputFilter] = useState('');
 
-  const { data: allTypes, error, isLoading } = useGetTypesPokemonQuery(null);  
+  const { data: allTypes, error, isLoading } = useGetTypesPokemonQuery(null);
   const [getPokemons] = useLazyGetPokemonsQuery();
 
   const [
@@ -64,7 +60,7 @@ export const NavBar = () => {
       fetchData();
     }
     dispatch(activeFilter(inputFilter));
-  }, [dispatch ,getPokemonfiltered, isFindByName, inputFilter]);
+  }, [dispatch, getPokemonfiltered, isFindByName, inputFilter]);
 
   useEffect(() => {
     if (isSuccess && pokemon && !isFindByName) {
@@ -156,14 +152,7 @@ export const NavBar = () => {
       )}
 
       <Spacer css={{ flex: 1 }} />
-      <Switch
-        checked={isDark}
-        onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
-        size='xl'
-        iconOn={<SunIcon filled />}
-        iconOff={<MoonIcon filled />}
-        css={{ marginRight: '20px' }}
-      />
+      <SwitchTheme />
       <NextLink href='/favorites' passHref>
         <Link>
           <Text h3>Favorites</Text>
