@@ -6,13 +6,17 @@ services:
         context: ./Node-pokemon-back
     ports:
       - "5000:5000"
+    restart: unless-stopped
     depends_on:
       - frontend
+    volumes:
+      - ./Node-pokemon-back:/usr/src/app
+      
 
   frontend:
     build:
       context: ./Next-pokemon-front      
     volumes:
-      - .:/app
+      - ./Next-pokemon-front:/usr/src/app
     ports:
       - "3000:3000"
