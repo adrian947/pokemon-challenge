@@ -3,7 +3,8 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const pokemonsApi = createApi({
   reducerPath: 'pokemonsApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5000/api',
+    // baseUrl: 'http://localhost:5000/api',
+    baseUrl: 'https://pokemon-challenge-bye0.onrender.com/api',
     prepareHeaders: (headers, { getState }) => {
       const token = localStorage.getItem('token');
       if (token) {
