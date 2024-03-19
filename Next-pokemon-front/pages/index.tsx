@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 
@@ -10,7 +10,7 @@ import { savePage, saveToken, setPokemons } from '../redux/pokemonSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { SmallPokemon } from '../interfaces/interfaces';
-import { Button, Grid, Row } from '@nextui-org/react';
+import { Button, Grid, Loading, Row } from '@nextui-org/react';
 import { CardPokemon } from '../components/ui';
 
 import styles from '../styles/Error.module.css';
@@ -18,23 +18,32 @@ import { Pagination } from '@nextui-org/react';
 import { Layout } from '../components/layouts';
 import Spinner from '../components/ui/Spinner';
 
-const Home: NextPage = () => {  
-  const { push } = useRouter();  
+const Home: NextPage = () => {
+  const { push } = useRouter();
   const dispatch = useDispatch();
 
-  const [getJWT, { error: errorToken }] = useLazyGetJWTQuery();  
-  const [getPokemons, { isLoading, isError, data: allData }] = useLazyGetPokemonsQuery();
+  const [loading, setLoading] = useState(false);
 
-  const { pokemons, activeFilter, token: tokenStore, page } = useSelector(
-    (state: any) => state.pokemons
-  );
+  const [getJWT, { error: errorToken }] = useLazyGetJWTQuery();
+  const [getPokemons, { isLoading, isError, data: allData }] =
+    useLazyGetPokemonsQuery();
+
+  const {
+    pokemons,
+    activeFilter,
+    token: tokenStore,
+    page,
+  } = useSelector((state: any) => state.pokemons);
 
   const fetchPokemons = useCallback(async () => {
     try {
+      setLoading(true);
       const { data } = await getPokemons({ page });
       dispatch(setPokemons(data.results));
     } catch (error) {
       push('/error');
+    } finally {
+      setLoading(false);
     }
   }, [page, dispatch, push, getPokemons]);
 
@@ -49,9 +58,8 @@ const Home: NextPage = () => {
     }
   }, [dispatch, fetchPokemons, push, page, isError]);
 
-  
   const handlePageChange = (newPage: number) => {
-    dispatch(savePage(newPage))    
+    dispatch(savePage(newPage));
   };
 
   const handleLogin = async () => {
@@ -68,16 +76,29 @@ const Home: NextPage = () => {
       <Button color='gradient' bordered auto onClick={handleLogin}>
         Login
       </Button>
-      {/* @ts-ignore */}
-      <p>{errorToken && errorToken.data.msg}</p>
+      {loading && (
+        <>
+          <Loading
+            type='gradient'
+            loadingCss={{ $$loadingSize: '50px', $$loadingBorder: '10px' }}
+            css={{
+              margin: '20px 0px',
+            }}
+          />
+          <p>Wait, we are bringing up the server. It may take up to 1 minute.</p>
+          <p>Espera, estamos iniciando el servidor. Puede tardar hasta 1 minuto.</p>
+          {/* @ts-ignore */}
+          <p>{errorToken && errorToken.data.msg}</p>
+        </>
+      )}
     </div>
   );
-  
+
   if (isLoading) return <Spinner />;
   return (
     <>
       {!tokenStore ? (
-        <ButtonLogin />        
+        <ButtonLogin />
       ) : (
         <Layout>
           {!activeFilter && (
