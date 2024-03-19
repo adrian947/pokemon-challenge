@@ -37,13 +37,10 @@ const Home: NextPage = () => {
 
   const fetchPokemons = useCallback(async () => {
     try {
-      setLoading(true);
       const { data } = await getPokemons({ page });
       dispatch(setPokemons(data.results));
     } catch (error) {
       push('/error');
-    } finally {
-      setLoading(false);
     }
   }, [page, dispatch, push, getPokemons]);
 
@@ -63,11 +60,17 @@ const Home: NextPage = () => {
   };
 
   const handleLogin = async () => {
-    const { data } = await getJWT(null);
-    if (data) {
-      localStorage.setItem('token', data.token);
-      dispatch(saveToken(data.token));
-      fetchPokemons();
+    try {
+      setLoading(true);
+      const { data } = await getJWT(null);
+      if (data) {
+        localStorage.setItem('token', data.token);
+        dispatch(saveToken(data.token));
+        fetchPokemons();
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -85,8 +88,12 @@ const Home: NextPage = () => {
               margin: '20px 0px',
             }}
           />
-          <p>Wait, we are bringing up the server. It may take up to 1 minute.</p>
-          <p>Espera, estamos iniciando el servidor. Puede tardar hasta 1 minuto.</p>
+          <p>
+            Wait, we are bringing up the server. It may take up to 1 minute.
+          </p>
+          <p>
+            Espera, estamos iniciando el servidor. Puede tardar hasta 1 minuto.
+          </p>
           {/* @ts-ignore */}
           <p>{errorToken && errorToken.data.msg}</p>
         </>
